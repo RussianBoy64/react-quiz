@@ -2,11 +2,14 @@ import React from 'react'
 import { useState } from 'react'
 import classes from './Quiz.module.css'
 import ActiveQuiz from '../../components/activeQuiz/ActiveQuiz'
+import FinishedQuiz from '../../components/FinishedQuiz/FinishedQuiz'
 
 
 
 function Quiz() {
   let [activeQuestion, setActiveQuestion] = useState(0)
+  let [answerState, setAnswerState] = useState(null) // {[id]: 'success' 'error' }
+  let [finishedQuiz, setFinishedQuiz] = useState(true)
   const [quiz, setQuiz] = useState([
     {
       question: 'Какого цвета небо?',
@@ -29,24 +32,59 @@ function Quiz() {
   ])
   
   const onAnswerClickHandler = answerId => {
-    console.log(`Answer Id: ${answerId}`)
     
-    setActiveQuestion(activeQuestion = activeQuestion + 1)
+    // получаем текущий вопрос
+    const question = quiz[activeQuestion] 
+
+    // проверяем правильный ли он
+    if (question.rightAnswerId === answerId) {
+
+      // подсвечиваем зеленым
+      setAnswerState({ [answerId]: 'success'})
+      // переходим на следующий вопрос
+      const timeout = setTimeout(() => {
+        
+        if (isQuizFinished()) {
+          setFinishedQuiz(true)
+        } else {
+          setActiveQuestion(activeQuestion = activeQuestion + 1)
+          setAnswerState(null)
+        }
+        
+        clearTimeout(timeout)
+      }, 1000)
+
+    } else {
+      // подсвечиваем красным
+      // перерендериваем компонент
+      setAnswerState({ [answerId]: 'error'})
+    }
   }
   
-    return (
-      <div className = {classes.Quiz}>
-          <div className = {classes.QuizWrapper}>
-              <h1>Ответьте на все вопросы</h1>
-                <ActiveQuiz 
-                  answers = { quiz[activeQuestion].answers }
-                  question = { quiz[activeQuestion].question }
-                  onAnswerClick = { onAnswerClickHandler }
-                  quizLength = { quiz.length }
-                  answerNumber = { activeQuestion + 1 }
-                />
-          </div>
-      </div>
+  const isQuizFinished = () => {
+    return activeQuestion + 1 === quiz.length
+  }
+
+  return (
+    <div className = {classes.Quiz}>
+        <div className = {classes.QuizWrapper}>
+            <h1>Ответьте на все вопросы</h1>
+
+              { finishedQuiz
+                  ? <FinishedQuiz 
+                    
+                    />
+                  : <ActiveQuiz 
+                      answers = { quiz[activeQuestion].answers }
+                      question = { quiz[activeQuestion].question }
+                      onAnswerClick = { onAnswerClickHandler }
+                      quizLength = { quiz.length }
+                      answerNumber = { activeQuestion + 1 }
+                      state = { answerState }
+                    />
+              }
+        </div>
+    </div>
   )
 }
 
