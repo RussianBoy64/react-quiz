@@ -9,7 +9,8 @@ import FinishedQuiz from '../../components/FinishedQuiz/FinishedQuiz'
 function Quiz() {
   let [activeQuestion, setActiveQuestion] = useState(0)
   let [answerState, setAnswerState] = useState(null) // {[id]: 'success' 'error' }
-  let [finishedQuiz, setFinishedQuiz] = useState(true)
+  let [finishedQuiz, setFinishedQuiz] = useState(false)
+  const [result, setResult] = useState({}) // {'success' 'error' }
   const [quiz, setQuiz] = useState([
     {
       question: 'Какого цвета небо?',
@@ -38,6 +39,12 @@ function Quiz() {
 
     // проверяем правильный ли он
     if (question.rightAnswerId === answerId) {
+      if (!result[activeQuestion]) {
+        // записываем результат
+        setResult({ ...result, [activeQuestion]: 'success'})
+        console.log(result);
+      }
+      
 
       // подсвечиваем зеленым
       setAnswerState({ [answerId]: 'success'})
@@ -58,11 +65,21 @@ function Quiz() {
       // подсвечиваем красным
       // перерендериваем компонент
       setAnswerState({ [answerId]: 'error'})
+      // записываем результат
+      setResult({ ...result, [activeQuestion]: 'error'})
+      console.log(result);
     }
   }
   
   const isQuizFinished = () => {
     return activeQuestion + 1 === quiz.length
+  }
+
+  const retryHandler = () => {
+    setActiveQuestion(0)
+    setAnswerState(null)
+    setFinishedQuiz(false)
+    setResult({})
   }
 
   return (
@@ -72,7 +89,9 @@ function Quiz() {
 
               { finishedQuiz
                   ? <FinishedQuiz 
-                    
+                      result = { result }
+                      quiz = { quiz }
+                      retry = { retryHandler }
                     />
                   : <ActiveQuiz 
                       answers = { quiz[activeQuestion].answers }
