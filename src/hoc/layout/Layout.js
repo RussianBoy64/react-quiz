@@ -1,6 +1,7 @@
 import React, {useState } from 'react'
 import classes from './Layout.module.css'
 import MenuToggle from '../../components/Navigation/MenuToggle/MenuToggle'
+import Drawer from '../../components/Navigation/Drawer/Drawer'
 
 function Layout(props) {
   
@@ -9,16 +10,26 @@ function Layout(props) {
   const openHandler = () => {
     setMenu(!menu)
   }
+
+  const menuClose = () => {
+    setMenu(false)
+  }
   
   return (
     <div className={classes.layout}>
-        <MenuToggle 
-          onClick={() => openHandler()}
-          isOpen = {menu}
-        />
-        <main>
-            {props.children}
-        </main>
+      <MenuToggle 
+        onClick={openHandler}
+        isOpen = {menu}
+      />
+      
+      <Drawer
+        onClick = {menuClose}
+        isOpen = {menu}
+      />
+
+      <main>
+        {props.children}
+      </main>
     </div>
   )
 }
