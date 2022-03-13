@@ -1,5 +1,6 @@
 import React from 'react'
 import classes from './FinishedQuiz.module.css'
+import Button from '../UI/Button/Button'
 
 function FinishedQuiz({ result, quiz, retry }) {
   
@@ -32,7 +33,12 @@ function FinishedQuiz({ result, quiz, retry }) {
 
       <p>Правильно { successCount } из { quiz.length }</p>
       <div>
-        <button onClick = {() => retry()}>Повторить</button>
+        <Button type = 'primary' onClick = {() => retry()}>
+          Повторить
+        </Button>
+        <Button type = 'success'>
+          Перейти к списку тестов
+        </Button>
       </div>
     </div>
   )
