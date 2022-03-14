@@ -1,4 +1,5 @@
-import React, {useState } from 'react'
+import React, { useState } from 'react'
+import { Outlet } from 'react-router-dom'
 import classes from './Layout.module.css'
 import MenuToggle from '../../components/Navigation/MenuToggle/MenuToggle'
 import Drawer from '../../components/Navigation/Drawer/Drawer'
@@ -28,7 +29,7 @@ function Layout(props) {
       />
 
       <main>
-        {props.children}
+        <Outlet/>
       </main>
     </div>
   )

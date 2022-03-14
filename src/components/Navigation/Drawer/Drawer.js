@@ -1,10 +1,22 @@
 import React from 'react'
+import { NavLink } from 'react-router-dom'
 import classes from './Drawer.module.css'
 import Backdrop from '../../UI/Backdrop/Backdrop'
 
 
 const links = [
-	1, 2, 3
+	{
+    to: '/',
+	  label: 'Список'
+	}, 
+	{
+    to: '/auth',
+	  label: 'Авторизация'
+	}, 
+	{
+    to: '/quiz-creator',
+	  label: 'Создать тест'
+	}
 ]
 
 function Drawer(props) {
@@ -24,7 +36,12 @@ function Drawer(props) {
 					{links.map((link, index) => {
 						return (
 							<li key={index}>
-								<a>{`Link ${link}`}</a>
+								<NavLink 
+                to = {link.to}
+                onClick = {props.onClick}
+                >
+                  {link.label}
+                </NavLink>
 							</li>
 						)})
 					}
