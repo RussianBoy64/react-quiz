@@ -1,8 +1,8 @@
 import React from 'react'
 import classes from './Input.module.css'
 
-function isInvalid({valid, shouldInvalidate, touched}) {
-  return !valid && shouldInvalidate && touched
+function isInvalid({valid, shouldValidate, touched}) {
+  return !valid && shouldValidate && touched
 }
 
 function Input(props) {
@@ -10,6 +10,8 @@ function Input(props) {
   const inputType = props.type || 'text'
   const htmlFor = `${props.label}-${Math.floor(Math.random() * 100)}`
   const cls = [classes.Input]
+
+  if (isInvalid(props)) cls.push(classes.invalid) 
   
   return (
     <div className={cls.join(' ')}>
