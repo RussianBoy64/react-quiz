@@ -1,36 +1,22 @@
 import React from 'react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useParams } from 'react-router-dom'
 import classes from './Quiz.module.css'
 import ActiveQuiz from '../../components/activeQuiz/ActiveQuiz'
 import FinishedQuiz from '../../components/FinishedQuiz/FinishedQuiz'
+import axios from "../../axios/axios"
+import Loader from '../../components/UI/Loader/Loader'
 
 
 
-function Quiz() {
+function Quiz(props) {
   let [activeQuestion, setActiveQuestion] = useState(0)
   let [answerState, setAnswerState] = useState(null) // {[id]: 'success' 'error' }
   let [finishedQuiz, setFinishedQuiz] = useState(false)
+  let [loading, setLoading] = useState(true)
+  let params = useParams()
   const [result, setResult] = useState({}) // {'success' 'error' }
-  const [quiz, setQuiz] = useState([
-    {
-      question: 'Какого цвета небо?',
-      rightAnswerId: 2,
-      answers: [
-      {text: 'Черный', id: 1},
-      {text: 'Голубой', id: 2},
-      {text: 'Красный', id: 3},
-      {text: 'Желтый', id: 4}
-    ]},
-    {
-      question: 'В каком году основали Санкт-Петербург?',
-      rightAnswerId: 3,
-      answers: [
-      {text: '1700', id: 1},
-      {text: '1702', id: 2},
-      {text: '1703', id: 3},
-      {text: '1803', id: 4}
-    ]},
-  ])
+  const [quiz, setQuiz] = useState([])
   
   const onAnswerClickHandler = answerId => {
     
@@ -42,7 +28,6 @@ function Quiz() {
       if (!result[activeQuestion]) {
         // записываем результат
         setResult({ ...result, [activeQuestion]: 'success'})
-        console.log(result);
       }
       
 
@@ -67,7 +52,6 @@ function Quiz() {
       setAnswerState({ [answerId]: 'error'})
       // записываем результат
       setResult({ ...result, [activeQuestion]: 'error'})
-      console.log(result);
     }
   }
   
@@ -82,12 +66,26 @@ function Quiz() {
     setResult({})
   }
 
+  useEffect(async () => {
+    try {
+      const response = await axios.get(`/quizes/${params.id}.json`)
+      const loadQuiz = response.data
+      
+      setQuiz(loadQuiz)
+      setLoading(false)
+    } catch (e) {
+      console.log(e)
+    }
+  }, [])
+
   return (
     <div className = {classes.Quiz}>
         <div className = {classes.QuizWrapper}>
             <h1>Ответьте на все вопросы</h1>
 
-              { finishedQuiz
+              { loading 
+                ? <Loader/>
+                : finishedQuiz
                   ? <FinishedQuiz 
                       result = { result }
                       quiz = { quiz }

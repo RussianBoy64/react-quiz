@@ -16,7 +16,6 @@ function FinishedQuiz({ result, quiz, retry }) {
     <div className = { classes.FinishedQuiz }>
       <ul>
         { quiz.map((quizItem, index) => {
-          console.log(result)
           const cls = [
             'fa',
             result[index] === 'error' ? 'fa-xmark' : 'fa-check',

@@ -16,7 +16,7 @@ function App() {
           <Route index element = {<QuizList/>}/>
           <Route path = 'auth' element = {<Auth/>}/>
           <Route path = 'quiz-creator' element = {<QuizCreator/>}/>
-          <Route path = 'quiz/:id' element = {<Quiz/>}/>
+          <Route path = 'quiz/:id' element = {<Quiz />}/>
         </Route>
       </Routes>  
       

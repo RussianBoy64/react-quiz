@@ -4,6 +4,7 @@ import Button from "./../../components/UI/Button/Button"
 import { createControl, controlValidate, formValidate } from "../../form/formFramework"
 import Input from "../../components/UI/Input/Input"
 import Select from "../../components/UI/Select/Select"
+import axios from "../../axios/axios"
 
 const submitHandler = event => {
   event.preventDefault()
@@ -90,7 +91,7 @@ function QuizCreator() {
 
     const newQuestion = {
       question: formControl.question.value,
-      rightAnswerId: rightAnswerId,
+      rightAnswerId: +rightAnswerId,
       answers: [
         {text: formControl.option1.value, id: formControl.option1.id},
         {text: formControl.option2.value, id: formControl.option2.id},
@@ -107,10 +108,19 @@ function QuizCreator() {
     setIsFormValid(false)
   }
 
-  const createQuizHandler = event => {
+  const createQuizHandler = async event => {
     event.preventDefault()
-  
-    console.log(quiz)
+    
+    try {
+      await axios.post('/quizes.json', quiz)
+    } catch (e) {
+      console.log(e)
+    }
+
+    setQuiz([])
+    setRightAnswerId(1)
+    setFormControl(createFromControls())
+    setIsFormValid(false)
   }
 
   const select = <Select
