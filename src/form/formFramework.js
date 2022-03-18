@@ -11,7 +11,9 @@ export function createControl(config, validation) {
 
 
 export function controlValidate(value, validation) {
-  if (!validation) true
+  if (!validation) {
+    return true
+  }
 
   let isValid = true
 
