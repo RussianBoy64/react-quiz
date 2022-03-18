@@ -3,6 +3,7 @@ import classes from './Auth.module.css'
 import Button from '../../components/UI//Button/Button'
 import Input from '../../components/UI/Input/Input'
 import is from 'is_js'
+import axios from 'axios'
 
 function Auth() {
   let [isFromValid, setIsFromValid] = useState(false)
@@ -90,7 +91,36 @@ function Auth() {
   
   const submitHandler = event => {
     event.preventDefault()
-    console.log(`submit ${event.target}`)
+  }
+
+  const onSignInHandler = async () => {
+    const userData = {
+      email: formControles.email.value,
+      password: formControles.password.value,
+      returnSecureToken: true
+    }
+
+    try {
+      const response = await axios.post('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyAN0CO7qPr7AjDk25UEc0PiaSO-GOnx2Z0', userData)
+      console.log(response.data)
+    } catch (e) {
+      console.log(e)
+    }
+  }
+  
+  const onRegisterHandler = async () => {
+    const userData = {
+      email: formControles.email.value,
+      password: formControles.password.value,
+      returnSecureToken: true
+    }
+
+    try {
+      const response = await axios.post('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyAN0CO7qPr7AjDk25UEc0PiaSO-GOnx2Z0', userData)
+      console.log(response.data)
+    } catch (e) {
+      console.log(e)
+    }
   }
   
   return (
@@ -107,14 +137,14 @@ function Auth() {
 
           <Button 
             type = 'success'
-            onClick = {submitHandler}
+            onClick = {onSignInHandler}
             disabled = {!isFromValid}
           >
             Войти
           </Button>
           <Button 
             type = 'primary'
-            onClick = {submitHandler}
+            onClick = {onRegisterHandler}
             disabled = {!isFromValid}
           >
             Регистрация
