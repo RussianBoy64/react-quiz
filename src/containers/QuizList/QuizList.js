@@ -1,15 +1,14 @@
-import React, { useState, useEffect } from "react"
+import React, { useEffect } from "react"
 import classes from "./QuizList.module.css"
 import { NavLink } from "react-router-dom"
-import axios from "../../axios/axios"
 import Loader from './../../components/UI/Loader/Loader'
+import {connect} from 'react-redux'
+import { fetchQuizList } from '../../store/actions/quizList'
 
-function QuizList() {
-  const [quizList, setQuizList] = useState([])
-  const [loading, setLoading] = useState(true)
+function QuizList(props) {
 
   const renderQuizes = () => {
-    return quizList.map((quiz) => {
+    return props.quizList.map((quiz) => {
       return (
         <li key={quiz.id}>
           <NavLink to={"/quiz/" + quiz.id}>{quiz.name}</NavLink>
@@ -18,38 +17,35 @@ function QuizList() {
     })
   }
 
-  useEffect(async() => {
-    try {
-      const response = await axios.get(
-        "/quizes.json"
-      )
-
-      const quizes = []
-
-      Object.keys(response.data).forEach((id, index) => {
-        quizes.push({
-          id: id,
-          name: `Тест №${index + 1}`
-        })
-      })
-
-      setQuizList(quizes)
-      setLoading(false)
-    } catch (e) {
-      console.log(e);
-    }
+  useEffect(() => {
+    props.fetchQuizList()
   }, [])
 
   return (
     <div className={classes.QuizList}>
       <div>
         <h1>Список</h1>
-
-        {loading ? <Loader/> : <ul>{renderQuizes()}</ul>}
-        
+        {
+          props.loading && props.quizList.length !== 0 
+            ? <Loader/> 
+            : <ul>{renderQuizes()}</ul>
+        }
       </div>
     </div>
   );
 }
 
-export default QuizList
+function mapStateToProps(state) {
+  return {
+    quizList: state.quiz.quizList,
+    loading: state.quiz.loading
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    fetchQuizList: () => dispatch(fetchQuizList())
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(QuizList)
