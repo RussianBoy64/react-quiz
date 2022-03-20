@@ -4,6 +4,7 @@ import {
   FETCH_QUIZLIST_SUCCESS,
   FETCH_QUIZ_SUCCESS,
   SET_QUIZ_RESULT,
+  SET_ANSWER_STATE,
   SET_FINISH_QUIZ,
   SET_ACTIVE_QUESTION,
   RETRY_HANDLER,
@@ -57,10 +58,12 @@ export function onAnswerClickHandler(answerId) {
 
     // проверяем правильный ли он
     if (question.rightAnswerId === answerId) {
+      // подсвечиваем зеленым
+      dispatch(setAnswerState({ [answerId]: 'success' }))
       if (!state.result[state.activeQuestion]) {
         // записываем результат
         state.result[state.activeQuestion] = 'success'
-        dispatch(setQuizResult(state.result, { [answerId]: 'success' }))
+        dispatch(setQuizResult(state.result))
       }
       
       // переходим на следующий вопрос
@@ -77,10 +80,11 @@ export function onAnswerClickHandler(answerId) {
 
     } else {
       // подсвечиваем красным
+      dispatch(setAnswerState({ [answerId]: 'error' }))
       // перерендериваем компонент
       // записываем результат
       state.result[state.activeQuestion] = 'error'
-      dispatch(setQuizResult(state.result, { [answerId]: 'error' }))
+      dispatch(setQuizResult(state.result))
     }
   }
 }
@@ -121,10 +125,16 @@ function fetchQuizSuccess(loadQuiz) {
   }
 }
 
-function setQuizResult(result, answerState) {
+function setQuizResult(result) {
   return {
     type: SET_QUIZ_RESULT,
-    result,
+    result
+  }
+}
+
+function setAnswerState(answerState) {
+  return {
+    type: SET_ANSWER_STATE,
     answerState
   }
 }

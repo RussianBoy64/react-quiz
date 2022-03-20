@@ -4,7 +4,8 @@ import Button from "./../../components/UI/Button/Button"
 import { createControl, controlValidate, formValidate } from "../../form/formFramework"
 import Input from "../../components/UI/Input/Input"
 import Select from "../../components/UI/Select/Select"
-import axios from "../../axios/axios"
+import {connect} from "react-redux"
+import { addQuizQuestion, createNewQuiz } from '../../store/actions/createQuiz'
 
 const submitHandler = event => {
   event.preventDefault()
@@ -37,8 +38,7 @@ const createOption = (number) => {
   );
 };
 
-function QuizCreator() {
-  const [quiz, setQuiz] = useState([])
+function QuizCreator(props) {
   let [rightAnswerId, setRightAnswerId] = useState(1)
   const [formControl, setFormControl] = useState(createFromControls())
   let [isFormValid, setIsFormValid] = useState(false)
@@ -85,9 +85,6 @@ function QuizCreator() {
 
   const addQuestionHandler = event => {
     event.preventDefault()
-  
-    const quizArray = [...quiz]
-    const index = quizArray.length + 1
 
     const newQuestion = {
       question: formControl.question.value,
@@ -100,24 +97,18 @@ function QuizCreator() {
       ]
     }
 
-    quizArray.push(newQuestion)
+    props.addQuizQuestion(newQuestion)
 
-    setQuiz(quizArray)
     setRightAnswerId(1)
     setFormControl(createFromControls())
     setIsFormValid(false)
   }
 
-  const createQuizHandler = async event => {
+  const createQuizHandler = event => {
     event.preventDefault()
     
-    try {
-      await axios.post('/quizes.json', quiz)
-    } catch (e) {
-      console.log(e)
-    }
+    props.createNewQuiz()
 
-    setQuiz([])
     setRightAnswerId(1)
     setFormControl(createFromControls())
     setIsFormValid(false)
@@ -156,7 +147,7 @@ function QuizCreator() {
           <Button 
             type = "success" 
             onClick = {createQuizHandler}
-            disabled = {quiz.length === 0}
+            disabled = {props.quiz.length === 0}
           >
             Создать тест
           </Button>
@@ -166,4 +157,17 @@ function QuizCreator() {
   );
 }
 
-export default QuizCreator;
+function mapStateToProps(state) {
+  return {
+    quiz: state.create.quiz
+  }
+}
+
+function mapDispatchToProps(dispatch){
+  return {
+    addQuizQuestion: newQuestion => dispatch(addQuizQuestion(newQuestion)),
+    createNewQuiz: () => dispatch(createNewQuiz()),
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(QuizCreator)

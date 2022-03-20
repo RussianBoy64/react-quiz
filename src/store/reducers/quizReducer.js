@@ -4,6 +4,7 @@ import {
   FETCH_QUIZLIST_SUCCESS,
   FETCH_QUIZ_SUCCESS,
   SET_QUIZ_RESULT,
+  SET_ANSWER_STATE,
   SET_FINISH_QUIZ,
   SET_ACTIVE_QUESTION,
   RETRY_HANDLER
@@ -53,7 +54,11 @@ export default function quizReducer(state = initialState, action) {
     case SET_QUIZ_RESULT:
       return {
         ...state,
-        result: action.result,
+        result: action.result
+      }
+    case SET_ANSWER_STATE:
+      return {
+        ...state,
         answerState: action.answerState
       }
     case SET_FINISH_QUIZ:
