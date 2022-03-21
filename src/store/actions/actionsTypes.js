@@ -16,3 +16,7 @@ export const RETRY_HANDLER = 'RETRY_HANDLER'
 //QuizCreator actionTypes
 export const ADD_QUIZ_QUESTION = 'ADD_QUIZ_QUESTION'
 export const RETRY_QUIZ = 'RETRY_QUIZ'
+
+//Auth actionTypes
+export const LOG_IN = 'LOG_IN'
+export const AUTO_LOG_OUT = 'AUTO_LOG_OUT'

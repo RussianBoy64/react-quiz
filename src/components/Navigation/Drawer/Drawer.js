@@ -4,23 +4,18 @@ import classes from './Drawer.module.css'
 import Backdrop from '../../UI/Backdrop/Backdrop'
 
 
-const links = [
-	{
-    to: '/',
-	  label: 'Список'
-	}, 
-	{
-    to: '/auth',
-	  label: 'Авторизация'
-	}, 
-	{
-    to: '/quiz-creator',
-	  label: 'Создать тест'
-	}
-]
-
 function Drawer(props) {
   
+	const links = [{to: '/', label: 'Список'}]
+
+	if (props.isAuthenticated) {
+		links.push({to: '/quiz-creator', label: 'Создать тест'})
+		links.push({to: '/logout', label: 'Выйти'})
+	} else {
+		links.push({to: '/auth', label: 'Авторизация'})
+	}
+
+
 	const cls = [
 		classes.Drawer,
 	]

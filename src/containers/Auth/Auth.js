@@ -3,9 +3,10 @@ import classes from './Auth.module.css'
 import Button from '../../components/UI//Button/Button'
 import Input from '../../components/UI/Input/Input'
 import is from 'is_js'
-import axios from 'axios'
+import { onAuth } from '../../store/actions/auth'
+import { connect } from 'react-redux'
 
-function Auth() {
+function Auth(props) {
   let [isFromValid, setIsFromValid] = useState(false)
   const [formControles, setFormControles] = useState({
     email: {
@@ -93,34 +94,20 @@ function Auth() {
     event.preventDefault()
   }
 
-  const onSignInHandler = async () => {
-    const userData = {
-      email: formControles.email.value,
-      password: formControles.password.value,
-      returnSecureToken: true
-    }
-
-    try {
-      const response = await axios.post('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyAN0CO7qPr7AjDk25UEc0PiaSO-GOnx2Z0', userData)
-      console.log(response.data)
-    } catch (e) {
-      console.log(e)
-    }
+  const onSignInHandler = () => {
+    props.onAuth(
+      formControles.email.value,
+      formControles.password.value,
+      true
+    )
   }
   
-  const onRegisterHandler = async () => {
-    const userData = {
-      email: formControles.email.value,
-      password: formControles.password.value,
-      returnSecureToken: true
-    }
-
-    try {
-      const response = await axios.post('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyAN0CO7qPr7AjDk25UEc0PiaSO-GOnx2Z0', userData)
-      console.log(response.data)
-    } catch (e) {
-      console.log(e)
-    }
+  const onRegisterHandler = () => {
+    props.onAuth(
+      formControles.email.value,
+      formControles.password.value,
+      false
+    )
   }
   
   return (
@@ -155,4 +142,10 @@ function Auth() {
   )
 }
 
-export default Auth
+function mapDispatchToProps(dispatch) {
+  return {
+    onAuth: (email, password, isLogin) => dispatch(onAuth(email, password, isLogin))
+  }
+}
+
+export default connect(null, mapDispatchToProps)(Auth)

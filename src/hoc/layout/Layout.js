@@ -3,6 +3,7 @@ import { Outlet } from 'react-router-dom'
 import classes from './Layout.module.css'
 import MenuToggle from '../../components/Navigation/MenuToggle/MenuToggle'
 import Drawer from '../../components/Navigation/Drawer/Drawer'
+import { connect } from 'react-redux'
 
 function Layout(props) {
   
@@ -26,6 +27,7 @@ function Layout(props) {
       <Drawer
         onClick = {menuClose}
         isOpen = {menu}
+        isAuthenticated = {props.isAuthenticated}
       />
 
       <main>
@@ -35,4 +37,10 @@ function Layout(props) {
   )
 }
 
-export default Layout
+function mapStateToProps(state) {
+  return {
+    isAuthenticated: !!state.auth.token
+  }
+}
+
+export default connect(mapStateToProps)(Layout)
